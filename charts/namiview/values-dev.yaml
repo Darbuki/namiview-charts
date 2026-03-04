@@ -4,7 +4,7 @@
 replicaCount: 1
 
 image:
-  tag: "latest-dev"
+  tag: "04-03"
 
 app:
   googleRedirectUri: "https://dev.namiview.com"
