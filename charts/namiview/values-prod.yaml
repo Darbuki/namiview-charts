@@ -1,0 +1,10 @@
+# Production overrides
+# Applied on top of values.yaml by the namiview-app ArgoCD Application.
+
+replicaCount: 2
+
+image:
+  tag: "01-02"
+
+app:
+  googleRedirectUri: "https://namiview.com"

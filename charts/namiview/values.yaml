@@ -1,0 +1,49 @@
+# Default values for namiview.
+# Override with values-dev.yaml or values-prod.yaml.
+
+replicaCount: 1
+
+image:
+  repository: darbuki/namiview
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# Application-level configuration
+app:
+  googleRedirectUri: "http://localhost:8501"
+
+  minio:
+    endpoint: "minio.namiview-infra.svc.cluster.local:9000"
+
+  mongo:
+    hosts:
+      - "mongo-mongodb-0.mongo-mongodb-headless.namiview-infra.svc.cluster.local:27017"
+      - "mongo-mongodb-1.mongo-mongodb-headless.namiview-infra.svc.cluster.local:27017"
+      - "mongo-mongodb-2.mongo-mongodb-headless.namiview-infra.svc.cluster.local:27017"
+    replicaSet: "rs0"
+    authSource: "admin"
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8501
+  sessionAffinity: ClientIP
+  sessionAffinityTimeoutSeconds: 3600
+
+# Vault / External Secrets configuration
+vault:
+  clusterSecretStore: vault-cluster-gateway
+  refreshInterval: "1h"
+  paths:
+    mongodb: namiview/infra/mongodb/root
+    mongodbDb: namiview/infra/mongodb/db
+    minio: namiview/infra/minio/root
+    minioBucket: namiview/infra/minio/bucket
+    minioSecure: namiview/infra/minio/secure
+    googleCreds: namiview/app/google_creds.json
+    dockerReg: namiview/app/docker-reg
+
+# Network policy (disabled by default — enable in prod when ready)
+networkPolicy:
+  enabled: false
