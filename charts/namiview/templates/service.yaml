@@ -14,6 +14,13 @@ spec:
     clientIP:
       timeoutSeconds: {{ .Values.service.sessionAffinityTimeoutSeconds }}
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.targetPort }}
+    {{- if .Values.metrics.enabled }}
+    - name: metrics
+      protocol: TCP
+      port: {{ .Values.metrics.port }}
+      targetPort: {{ .Values.metrics.port }}
+    {{- end }}
