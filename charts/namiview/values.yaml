@@ -44,6 +44,19 @@ vault:
     googleCreds: namiview/app/google_creds.json
     dockerReg: namiview/app/docker-reg
 
+# Prometheus metrics
+metrics:
+  enabled: true
+  port: 9090
+  serviceMonitor:
+    enabled: true
+    interval: 30s
+    scrapeTimeout: 10s
+
+# Grafana dashboard (auto-discovered via sidecar)
+grafanaDashboard:
+  enabled: true
+
 # Network policy (disabled by default — enable in prod when ready)
 networkPolicy:
   enabled: false
