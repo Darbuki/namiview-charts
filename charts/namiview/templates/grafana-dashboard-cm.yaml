@@ -37,7 +37,7 @@ data:
           "options": { "colorMode": "value", "graphMode": "none", "justifyMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] }, "textMode": "auto" },
           "title": "Unique Users",
           "type": "stat",
-          "targets": [{ "expr": "namiview_unique_users", "legendFormat": "" }]
+          "targets": [{ "expr": "namiview_unique_users{namespace=~\"$namespace\"}", "legendFormat": "" }]
         },
         {
           "datasource": { "type": "prometheus", "uid": "${datasource}" },
@@ -53,7 +53,7 @@ data:
           "options": { "colorMode": "value", "graphMode": "none", "justifyMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] }, "textMode": "auto" },
           "title": "Gallery Images",
           "type": "stat",
-          "targets": [{ "expr": "namiview_gallery_images", "legendFormat": "" }]
+          "targets": [{ "expr": "namiview_gallery_images{namespace=~\"$namespace\"}", "legendFormat": "" }]
         },
         {
           "datasource": { "type": "prometheus", "uid": "${datasource}" },
@@ -69,7 +69,7 @@ data:
           "options": { "colorMode": "value", "graphMode": "area", "justifyMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] }, "textMode": "auto" },
           "title": "Images Uploaded (24h)",
           "type": "stat",
-          "targets": [{ "expr": "sum(increase(namiview_images_uploaded_total[24h]))", "legendFormat": "" }]
+          "targets": [{ "expr": "sum(increase(namiview_images_uploaded_total{namespace=~\"$namespace\"}[24h]))", "legendFormat": "" }]
         },
         {
           "datasource": { "type": "prometheus", "uid": "${datasource}" },
@@ -85,7 +85,7 @@ data:
           "options": { "colorMode": "value", "graphMode": "area", "justifyMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] }, "textMode": "auto" },
           "title": "Images Saved (24h)",
           "type": "stat",
-          "targets": [{ "expr": "sum(increase(namiview_images_saved_total[24h]))", "legendFormat": "" }]
+          "targets": [{ "expr": "sum(increase(namiview_images_saved_total{namespace=~\"$namespace\"}[24h]))", "legendFormat": "" }]
         },
         {
           "collapsed": false,
@@ -108,9 +108,9 @@ data:
           "title": "Image Activity Rate",
           "type": "timeseries",
           "targets": [
-            { "expr": "sum(rate(namiview_images_uploaded_total[$__rate_interval]))", "legendFormat": "Uploaded" },
-            { "expr": "sum(rate(namiview_images_saved_total[$__rate_interval]))", "legendFormat": "Saved" },
-            { "expr": "sum(rate(namiview_images_deleted_total[$__rate_interval]))", "legendFormat": "Deleted" }
+            { "expr": "sum(rate(namiview_images_uploaded_total{namespace=~\"$namespace\"}[$__rate_interval]))", "legendFormat": "Uploaded" },
+            { "expr": "sum(rate(namiview_images_saved_total{namespace=~\"$namespace\"}[$__rate_interval]))", "legendFormat": "Saved" },
+            { "expr": "sum(rate(namiview_images_deleted_total{namespace=~\"$namespace\"}[$__rate_interval]))", "legendFormat": "Deleted" }
           ]
         },
         {
@@ -127,8 +127,8 @@ data:
           "title": "User Activity",
           "type": "timeseries",
           "targets": [
-            { "expr": "sum(rate(namiview_logins_total[$__rate_interval]))", "legendFormat": "Logins" },
-            { "expr": "sum(rate(namiview_metadata_edits_total[$__rate_interval]))", "legendFormat": "Metadata Edits" }
+            { "expr": "sum(rate(namiview_logins_total{namespace=~\"$namespace\"}[$__rate_interval]))", "legendFormat": "Logins" },
+            { "expr": "sum(rate(namiview_metadata_edits_total{namespace=~\"$namespace\"}[$__rate_interval]))", "legendFormat": "Metadata Edits" }
           ]
         },
         {
@@ -152,7 +152,7 @@ data:
           "title": "Processing Rate by Mode",
           "type": "timeseries",
           "targets": [
-            { "expr": "sum by (mode) (rate(namiview_images_processed_total[$__rate_interval]))", "legendFormat": "{{ "{{" }}mode{{ "}}" }}" }
+            { "expr": "sum by (mode) (rate(namiview_images_processed_total{namespace=~\"$namespace\"}[$__rate_interval]))", "legendFormat": "{{ "{{" }}mode{{ "}}" }}" }
           ]
         },
         {
@@ -169,9 +169,9 @@ data:
           "title": "Processing Duration (p50 / p95 / p99)",
           "type": "timeseries",
           "targets": [
-            { "expr": "histogram_quantile(0.50, sum by (le, pipeline) (rate(namiview_processing_duration_seconds_bucket[$__rate_interval])))", "legendFormat": "p50 {{ "{{" }}pipeline{{ "}}" }}" },
-            { "expr": "histogram_quantile(0.95, sum by (le, pipeline) (rate(namiview_processing_duration_seconds_bucket[$__rate_interval])))", "legendFormat": "p95 {{ "{{" }}pipeline{{ "}}" }}" },
-            { "expr": "histogram_quantile(0.99, sum by (le, pipeline) (rate(namiview_processing_duration_seconds_bucket[$__rate_interval])))", "legendFormat": "p99 {{ "{{" }}pipeline{{ "}}" }}" }
+            { "expr": "histogram_quantile(0.50, sum by (le, pipeline) (rate(namiview_processing_duration_seconds_bucket{namespace=~\"$namespace\"}[$__rate_interval])))", "legendFormat": "p50 {{ "{{" }}pipeline{{ "}}" }}" },
+            { "expr": "histogram_quantile(0.95, sum by (le, pipeline) (rate(namiview_processing_duration_seconds_bucket{namespace=~\"$namespace\"}[$__rate_interval])))", "legendFormat": "p95 {{ "{{" }}pipeline{{ "}}" }}" },
+            { "expr": "histogram_quantile(0.99, sum by (le, pipeline) (rate(namiview_processing_duration_seconds_bucket{namespace=~\"$namespace\"}[$__rate_interval])))", "legendFormat": "p99 {{ "{{" }}pipeline{{ "}}" }}" }
           ]
         },
         {
@@ -196,7 +196,7 @@ data:
           "title": "Error Rate by Operation",
           "type": "timeseries",
           "targets": [
-            { "expr": "sum by (operation) (rate(namiview_errors_total[$__rate_interval]))", "legendFormat": "{{ "{{" }}operation{{ "}}" }}" }
+            { "expr": "sum by (operation) (rate(namiview_errors_total{namespace=~\"$namespace\"}[$__rate_interval]))", "legendFormat": "{{ "{{" }}operation{{ "}}" }}" }
           ]
         },
         {
@@ -213,7 +213,7 @@ data:
           "title": "Upload Size Distribution",
           "type": "timeseries",
           "targets": [
-            { "expr": "sum(increase(namiview_upload_size_bytes_bucket[$__rate_interval])) by (le)", "legendFormat": "{{ "{{" }}le{{ "}}" }}", "format": "heatmap" }
+            { "expr": "sum(increase(namiview_upload_size_bytes_bucket{namespace=~\"$namespace\"}[$__rate_interval])) by (le)", "legendFormat": "{{ "{{" }}le{{ "}}" }}", "format": "heatmap" }
           ]
         }
       ],
@@ -230,6 +230,19 @@ data:
             "query": "prometheus",
             "refresh": 1,
             "type": "datasource"
+          },
+          {
+            "current": { "selected": true, "text": "All", "value": "$__all" },
+            "datasource": { "type": "prometheus", "uid": "${datasource}" },
+            "definition": "label_values(namiview_images_uploaded_total, namespace)",
+            "hide": 0,
+            "includeAll": true,
+            "multi": false,
+            "name": "namespace",
+            "query": { "query": "label_values(namiview_images_uploaded_total, namespace)", "refId": "ns" },
+            "refresh": 2,
+            "sort": 1,
+            "type": "query"
           }
         ]
       },
