@@ -4,7 +4,7 @@
 replicaCount: 2
 
 image:
-  tag: "01-02"
+  tag: "09-03"
 
 app:
   googleRedirectUri: "https://namiview.com"
