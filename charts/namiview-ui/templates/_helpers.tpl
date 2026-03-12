@@ -42,8 +42,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
-Selector labels — keeps the existing `app: namiview-ui-app` label
-for compatibility with the existing Service selector.
+Selector labels
 */}}
 {{- define "namiview-ui.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "namiview-ui.name" . }}
