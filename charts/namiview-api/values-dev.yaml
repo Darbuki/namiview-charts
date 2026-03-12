@@ -1,7 +1,7 @@
 # Development / staging overrides
 # Applied on top of values.yaml by the namiview-dev ArgoCD Application.
 
-replicaCount: 1
+replicaCount: 3
 
 image:
   tag: "26-12-03-dev"
