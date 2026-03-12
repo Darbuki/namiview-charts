@@ -11,5 +11,5 @@ vault:
     mongodbDb: namiview-dev/infra/mongodb/db
     minioBucket: namiview-dev/infra/minio/bucket
 app:
-  googleRedirectUri: "https://dev.namiview.com"
+  googleRedirectUri: "https://dev.namiview.com/api/auth/callback"
   corsOrigins: "https://dev.namiview.com"

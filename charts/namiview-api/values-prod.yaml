@@ -7,4 +7,5 @@ image:
   tag: "09-03"
 
 app:
-  googleRedirectUri: "https://namiview.com"
+  googleRedirectUri: "https://namiview.com/api/auth/callback"
+  corsOrigins: "https://namiview.com"
