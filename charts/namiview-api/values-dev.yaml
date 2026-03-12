@@ -6,11 +6,6 @@ replicaCount: 1
 image:
   tag: "24-09-03-dev"
 
-app:
-  googleRedirectUri: "https://dev.namiview.com"
-
-# Override only the DB name and bucket name Vault paths.
-# Dev uses the same MongoDB and MinIO instances as prod but isolated data.
 vault:
   paths:
     mongodbDb: namiview-dev/infra/mongodb/db
