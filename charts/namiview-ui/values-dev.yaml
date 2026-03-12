@@ -4,7 +4,7 @@
 replicaCount: 1
 
 image:
-  tag: "24-09-03-dev"
+  tag: "26-12-03-dev"
 
 app:
   googleRedirectUri: "https://dev.namiview.com/api/auth/callback"
