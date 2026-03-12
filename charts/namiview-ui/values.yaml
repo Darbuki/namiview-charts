@@ -1,0 +1,40 @@
+# Default values for namiview.
+# Override with values-dev.yaml or values-prod.yaml.
+
+replicaCount: 1
+
+image:
+  repository: darbuki/namiview-ui
+  tag: latest
+  pullPolicy: IfNotPresent
+
+
+# Application-level configuration
+app:
+  googleRedirectUri: "https://namiview.com/api/auth/callback"
+
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+  sessionAffinity: ClientIP
+  sessionAffinityTimeoutSeconds: 3600
+
+# Vault / External Secrets configuration
+vault:
+  clusterSecretStore: vault-cluster-gateway
+  refreshInterval: "1h"
+  paths:
+    dockerReg: namiview/app/docker-reg
+    googleCreds: namiview/app/google_creds.json
+
+# # Prometheus metrics
+# metrics:
+#   enabled: true
+#   port: 9090
+#   serviceMonitor:
+#     enabled: true
+#     interval: 30s
+#     scrapeTimeout: 10s

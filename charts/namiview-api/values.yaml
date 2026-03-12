@@ -4,13 +4,14 @@
 replicaCount: 1
 
 image:
-  repository: darbuki/namiview
+  repository: darbuki/namiview-api
   tag: latest
   pullPolicy: IfNotPresent
 
+
 # Application-level configuration
 app:
-  googleRedirectUri: "http://localhost:8501"
+  googleRedirectUri: "https://namiview.com/api/auth/callback"
 
   minio:
     endpoint: "minio.namiview-infra.svc.cluster.local:9000"
@@ -26,8 +27,8 @@ app:
 # Service configuration
 service:
   type: ClusterIP
-  port: 80
-  targetPort: 8501
+  port: 8000
+  targetPort: 8000
   sessionAffinity: ClientIP
   sessionAffinityTimeoutSeconds: 3600
 
@@ -41,7 +42,6 @@ vault:
     minio: namiview/infra/minio/root
     minioBucket: namiview/infra/minio/bucket
     minioSecure: namiview/infra/minio/secure
-    googleCreds: namiview/app/google_creds.json
     dockerReg: namiview/app/docker-reg
 
 # Prometheus metrics

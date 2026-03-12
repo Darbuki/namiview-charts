@@ -2,13 +2,13 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "namiview.fullname" . }}-grafana-dashboard
+  name: {{ include "namiview-api.fullname" . }}-grafana-dashboard
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "namiview.labels" . | nindent 4 }}
+    {{- include "namiview-api.labels" . | nindent 4 }}
     grafana_dashboard: "1"
 data:
-  namiview-overview.json: |
+  namiview-api-overview.json: |
     {
       "annotations": { "list": [] },
       "editable": true,
@@ -218,7 +218,7 @@ data:
         }
       ],
       "schemaVersion": 39,
-      "tags": ["namiview"],
+      "tags": ["namiview-api"],
       "templating": {
         "list": [
           {
@@ -247,8 +247,8 @@ data:
         ]
       },
       "time": { "from": "now-24h", "to": "now" },
-      "title": "Namiview Application",
-      "uid": "namiview-app",
+      "title": "Namiview-Api Application",
+      "uid": "namiview-api-app",
       "version": 1
     }
 {{- end }}
