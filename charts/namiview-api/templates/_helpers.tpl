@@ -61,6 +61,14 @@ when deployed to different namespaces.
 {{ include "namiview-api.fullname" . }}-dockercfg
 {{- end }}
 
+{{- define "namiview-api.googleCredsSecretName" -}}
+{{ include "namiview-api.fullname" . }}-google-creds
+{{- end }}
+
+{{- define "namiview-api.jwtSecretName" -}}
+{{ include "namiview-api.fullname" . }}-jwt
+{{- end }}
+
 {{/*
 Build the MongoDB replica set connection string.
 Credentials are injected at runtime via Kubernetes env var interpolation

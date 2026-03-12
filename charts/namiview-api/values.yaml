@@ -12,6 +12,7 @@ image:
 # Application-level configuration
 app:
   googleRedirectUri: "https://namiview.com/api/auth/callback"
+  corsOrigins: "https://namiview.com"
 
   minio:
     endpoint: "minio.namiview-infra.svc.cluster.local:9000"
@@ -43,6 +44,8 @@ vault:
     minioBucket: namiview/infra/minio/bucket
     minioSecure: namiview/infra/minio/secure
     dockerReg: namiview/app/docker-reg
+    googleCreds: namiview/app/google_creds.json
+    jwt: namiview/app/jwt
 
 # Prometheus metrics
 metrics:

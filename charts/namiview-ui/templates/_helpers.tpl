@@ -53,10 +53,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Secret names — derived from fullname so prod and dev don't collide
 when deployed to different namespaces.
 */}}
-{{- define "namiview-ui.googleCredsSecretName" -}}
-{{ include "namiview-ui.fullname" . }}-google-creds
-{{- end }}
-
 {{- define "namiview-ui.dockercfgSecretName" -}}
 {{ include "namiview-ui.fullname" . }}-dockercfg
 {{- end }}

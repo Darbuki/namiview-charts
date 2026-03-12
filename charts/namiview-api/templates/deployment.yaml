@@ -72,3 +72,26 @@ spec:
                 secretKeyRef:
                   name: {{ include "namiview-api.connectionSecretName" . }}
                   key: MINIO_SECURE
+            - name: GOOGLE_REDIRECT_URI
+              value: {{ .Values.app.googleRedirectUri | quote }}
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/app/google_credentials.json"
+            - name: CORS_ORIGINS
+              value: {{ .Values.app.corsOrigins | quote }}
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "namiview-api.jwtSecretName" . }}
+                  key: JWT_SECRET
+          volumeMounts:
+            - name: google-creds
+              mountPath: "/app/google_credentials.json"
+              subPath: "google_credentials.json"
+              readOnly: true
+      volumes:
+        - name: google-creds
+          secret:
+            secretName: {{ include "namiview-api.googleCredsSecretName" . }}
+            items:
+              - key: "google-creds.json"
+                path: "google_credentials.json"

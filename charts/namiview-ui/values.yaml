@@ -9,11 +9,6 @@ image:
   pullPolicy: IfNotPresent
 
 
-# Application-level configuration
-app:
-  googleRedirectUri: "https://namiview.com/api/auth/callback"
-
-
 # Service configuration
 service:
   type: ClusterIP
@@ -28,15 +23,6 @@ vault:
   refreshInterval: "1h"
   paths:
     dockerReg: namiview/app/docker-reg
-    googleCreds: namiview/app/google_creds.json
 
-# # Prometheus metrics
-# metrics:
-#   enabled: true
-#   port: 9090
-#   serviceMonitor:
-#     enabled: true
-#     interval: 30s
-#     scrapeTimeout: 10s
 metrics:
   enabled: false
