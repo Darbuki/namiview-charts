@@ -2,9 +2,7 @@
 # Applied on top of values.yaml by the namiview-app ArgoCD Application.
 
 replicaCount: 0
-
 image:
   tag: "12-03"
-
 app:
   googleRedirectUri: "https://namiview.com/api/auth/callback"
