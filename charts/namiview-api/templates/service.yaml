@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "namiview.fullname" . }}-svc
+  name: {{ include "namiview-api.fullname" . }}-svc
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "namiview.labels" . | nindent 4 }}
+    {{- include "namiview-api.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   selector:
-    {{- include "namiview.selectorLabels" . | nindent 4 }}
+    {{- include "namiview-api.selectorLabels" . | nindent 4 }}
   sessionAffinity: {{ .Values.service.sessionAffinity }}
   sessionAffinityConfig:
     clientIP:

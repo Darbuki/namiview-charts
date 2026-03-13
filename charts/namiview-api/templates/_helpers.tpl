@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "namiview.name" -}}
+{{- define "namiview-api.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -9,7 +9,7 @@ Expand the name of the chart.
 Create a default fully qualified app name.
 If fullnameOverride is set, use it. Otherwise: release-chart (truncated).
 */}}
-{{- define "namiview.fullname" -}}
+{{- define "namiview-api.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -25,16 +25,16 @@ If fullnameOverride is set, use it. Otherwise: release-chart (truncated).
 {{/*
 Chart label
 */}}
-{{- define "namiview.chart" -}}
+{{- define "namiview-api.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "namiview.labels" -}}
-helm.sh/chart: {{ include "namiview.chart" . }}
-{{ include "namiview.selectorLabels" . }}
+{{- define "namiview-api.labels" -}}
+helm.sh/chart: {{ include "namiview-api.chart" . }}
+{{ include "namiview-api.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -42,29 +42,31 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
-Selector labels — keeps the existing `app: namiview-app` label
-for compatibility with the existing Service selector.
+Selector labels
 */}}
-{{- define "namiview.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "namiview.name" . }}
+{{- define "namiview-api.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "namiview-api.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-app: namiview-app
 {{- end }}
 
 {{/*
 Secret names — derived from fullname so prod and dev don't collide
 when deployed to different namespaces.
 */}}
-{{- define "namiview.connectionSecretName" -}}
-{{ include "namiview.fullname" . }}-connection-secret
+{{- define "namiview-api.connectionSecretName" -}}
+{{ include "namiview-api.fullname" . }}-connection-secret
 {{- end }}
 
-{{- define "namiview.googleCredsSecretName" -}}
-{{ include "namiview.fullname" . }}-google-creds
+{{- define "namiview-api.dockercfgSecretName" -}}
+{{ include "namiview-api.fullname" . }}-dockercfg
 {{- end }}
 
-{{- define "namiview.dockercfgSecretName" -}}
-{{ include "namiview.fullname" . }}-dockercfg
+{{- define "namiview-api.googleCredsSecretName" -}}
+{{ include "namiview-api.fullname" . }}-google-creds
+{{- end }}
+
+{{- define "namiview-api.jwtSecretName" -}}
+{{ include "namiview-api.fullname" . }}-jwt
 {{- end }}
 
 {{/*
@@ -73,6 +75,6 @@ Credentials are injected at runtime via Kubernetes env var interpolation
 using $(MONGO_USER), $(MONGO_PASSWORD), and $(MONGO_DB) — these must be
 defined earlier in the env list.
 */}}
-{{- define "namiview.mongoUri" -}}
+{{- define "namiview-api.mongoUri" -}}
 mongodb://$(MONGO_USER):$(MONGO_PASSWORD)@{{ join "," .Values.app.mongo.hosts }}/$(MONGO_DB)?replicaSet={{ .Values.app.mongo.replicaSet }}&authSource={{ .Values.app.mongo.authSource }}
 {{- end }}

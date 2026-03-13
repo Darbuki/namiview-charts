@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "namiview.fullname" . }}
+  name: {{ include "namiview-api.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "namiview.labels" . | nindent 4 }}
+    {{- include "namiview-api.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "namiview.selectorLabels" . | nindent 6 }}
+      {{- include "namiview-api.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "namiview.selectorLabels" . | nindent 8 }}
+        {{- include "namiview-api.selectorLabels" . | nindent 8 }}
     spec:
       imagePullSecrets:
-        - name: {{ include "namiview.dockercfgSecretName" . }}
+        - name: {{ include "namiview-api.dockercfgSecretName" . }}
       containers:
         - name: app
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 8501
+              containerPort: {{ .Values.service.targetPort }}
             {{- if .Values.metrics.enabled }}
             - name: metrics
               containerPort: {{ .Values.metrics.port }}
@@ -33,50 +33,56 @@ spec:
             - name: MONGO_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "namiview.connectionSecretName" . }}
+                  name: {{ include "namiview-api.connectionSecretName" . }}
                   key: MONGO_USER
             - name: MONGO_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "namiview.connectionSecretName" . }}
+                  name: {{ include "namiview-api.connectionSecretName" . }}
                   key: MONGO_PASSWORD
             - name: MONGO_DB
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "namiview.connectionSecretName" . }}
+                  name: {{ include "namiview-api.connectionSecretName" . }}
                   key: MONGO_DB
             # MONGO_USER, MONGO_PASSWORD, MONGO_DB must be defined above
             # for Kubernetes $(VAR) interpolation to work here.
             - name: MONGO_URI
-              value: {{ include "namiview.mongoUri" . | quote }}
+              value: {{ include "namiview-api.mongoUri" . | quote }}
             # ── MinIO ──────────────────────────────────────────────────────
             - name: MINIO_ENDPOINT
               value: {{ .Values.app.minio.endpoint | quote }}
             - name: MINIO_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "namiview.connectionSecretName" . }}
+                  name: {{ include "namiview-api.connectionSecretName" . }}
                   key: MINIO_ACCESS_KEY
             - name: MINIO_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "namiview.connectionSecretName" . }}
+                  name: {{ include "namiview-api.connectionSecretName" . }}
                   key: MINIO_SECRET_KEY
             - name: MINIO_BUCKET
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "namiview.connectionSecretName" . }}
+                  name: {{ include "namiview-api.connectionSecretName" . }}
                   key: MINIO_BUCKET
             - name: MINIO_SECURE
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "namiview.connectionSecretName" . }}
+                  name: {{ include "namiview-api.connectionSecretName" . }}
                   key: MINIO_SECURE
-            # ── Google Auth ────────────────────────────────────────────────
             - name: GOOGLE_REDIRECT_URI
               value: {{ .Values.app.googleRedirectUri | quote }}
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/app/google_credentials.json"
+            - name: CORS_ORIGINS
+              value: {{ .Values.app.corsOrigins | quote }}
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "namiview-api.jwtSecretName" . }}
+                  key: JWT_SECRET
           volumeMounts:
             - name: google-creds
               mountPath: "/app/google_credentials.json"
@@ -85,7 +91,7 @@ spec:
       volumes:
         - name: google-creds
           secret:
-            secretName: {{ include "namiview.googleCredsSecretName" . }}
+            secretName: {{ include "namiview-api.googleCredsSecretName" . }}
             items:
               - key: "google-creds.json"
                 path: "google_credentials.json"

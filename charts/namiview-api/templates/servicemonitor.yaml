@@ -2,14 +2,14 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "namiview.fullname" . }}
+  name: {{ include "namiview-api.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "namiview.labels" . | nindent 4 }}
+    {{- include "namiview-api.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      {{- include "namiview.selectorLabels" . | nindent 6 }}
+      {{- include "namiview-api.selectorLabels" . | nindent 6 }}
   endpoints:
     - port: metrics
       interval: {{ .Values.metrics.serviceMonitor.interval }}

@@ -2,14 +2,14 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ include "namiview.fullname" . }}-netpol
+  name: {{ include "namiview-api.fullname" . }}-netpol
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "namiview.labels" . | nindent 4 }}
+    {{- include "namiview-api.labels" . | nindent 4 }}
 spec:
   podSelector:
     matchLabels:
-      {{- include "namiview.selectorLabels" . | nindent 6 }}
+      {{- include "namiview-api.selectorLabels" . | nindent 6 }}
   policyTypes:
     - Ingress
     - Egress
@@ -21,7 +21,7 @@ spec:
               kubernetes.io/metadata.name: cloudflare
       ports:
         - protocol: TCP
-          port: 8501
+          port: 80
   egress:
     # DNS
     - to:

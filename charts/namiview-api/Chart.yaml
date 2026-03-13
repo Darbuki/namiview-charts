@@ -1,0 +1,8 @@
+apiVersion: v2
+name: namiview-api
+description: Namiview API — underwater image restoration application
+type: application
+version: 0.1.0
+appVersion: "2.0.0"
+maintainers:
+  - name: darbuki
