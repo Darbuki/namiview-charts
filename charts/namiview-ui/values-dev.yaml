@@ -3,6 +3,6 @@
 
 replicaCount: 1
 image:
-  tag: "dev-28-15-03-ade09bd"
+  tag: "dev-30-15-03-845c4ba"
 app:
   googleRedirectUri: "https://dev.namiview.com/api/auth/callback"
