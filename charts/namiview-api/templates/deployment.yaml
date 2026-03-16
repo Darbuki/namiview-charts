@@ -6,6 +6,7 @@ metadata:
   labels:
     {{- include "namiview-api.labels" . | nindent 4 }}
 spec:
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:

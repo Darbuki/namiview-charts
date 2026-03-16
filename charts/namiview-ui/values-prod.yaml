@@ -6,3 +6,5 @@ image:
   tag: "prod-16-03-5aa978d"
 app:
   googleRedirectUri: "https://namiview.com/api/auth/callback"
+
+revisionHistoryLimit: 3

@@ -11,3 +11,5 @@ vault:
 app:
   googleRedirectUri: "https://dev.namiview.com/api/auth/callback"
   corsOrigins: "https://dev.namiview.com"
+
+revisionHistoryLimit: 3
