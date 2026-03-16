@@ -64,3 +64,43 @@ grafanaDashboard:
 # Network policy (disabled by default — enable in prod when ready)
 networkPolicy:
   enabled: false
+
+startupProbe:
+  enabled: true
+  httpGet:
+    path: /api/health
+    port: 8000
+  failureThreshold: 30
+  periodSeconds: 10
+
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /api/health
+    port: 8000
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /api/health
+    port: 8000
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 256Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+PodDisruptionBudget:
+  enabled: true
+  minAvailable: 1

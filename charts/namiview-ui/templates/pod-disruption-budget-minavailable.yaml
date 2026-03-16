@@ -1,0 +1,12 @@
+{{- if PodDisruptionBudget.enabled }}  
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "namiview-ui.fullname" . }}
+  namespace: {{ .Release.Namespace }}  
+spec:
+  minAvailable: {{ .Values.PodDisruptionBudget.minAvailable }}
+  selector:
+    matchLabels:
+      {{- include "namiview-ui.labels" . | nindent 4 }}
+{{- end }}

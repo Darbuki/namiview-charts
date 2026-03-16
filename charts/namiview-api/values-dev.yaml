@@ -13,3 +13,6 @@ app:
   corsOrigins: "https://dev.namiview.com"
 
 revisionHistoryLimit: 3
+
+PodDisruptionBudget:
+  enabled: false

@@ -8,3 +8,6 @@ app:
   googleRedirectUri: "https://dev.namiview.com/api/auth/callback"
 
 revisionHistoryLimit: 3
+
+PodDisruptionBudget:
+  enabled: false

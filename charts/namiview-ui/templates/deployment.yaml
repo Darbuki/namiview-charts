@@ -17,7 +17,7 @@ spec:
         {{- include "namiview-ui.selectorLabels" . | nindent 8 }}
     spec:
       imagePullSecrets:
-        - name: {{ include "namiview-ui.dockercfgSecretName" . }}
+        - name: {{ include "namiview-ui.dockercfgSecretName" . }}      
       containers:
         - name: namiview-ui
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -29,3 +29,31 @@ spec:
             - name: metrics
               containerPort: {{ .Values.metrics.port }}
             {{- end }}
+          resources:
+            requests:
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.resources.limits.memory }}            
+          {{- if .Values.readinessProbe.enabled }}   
+          readinessProbe:
+            httpGet: 
+              path: {{ .Values.readinessProbe.httpGet.path }}
+              port: {{ .Values.readinessProbe.httpGet.port }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          {{- end}}
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.livenessProbe.httpGet.path }}
+              port: {{ .Values.livenessProbe.httpGet.port }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          {{- end }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL                   
