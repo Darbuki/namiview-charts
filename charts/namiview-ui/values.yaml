@@ -27,3 +27,19 @@ vault:
 
 metrics:
   enabled: false
+
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /healthz
+    port: 80
+  periodSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /healthz
+    port: 80
+  periodSeconds: 5
+  failureThreshold: 3
