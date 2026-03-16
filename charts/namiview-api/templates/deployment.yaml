@@ -127,6 +127,8 @@ spec:
               mountPath: "/app/google_credentials.json"
               subPath: "google_credentials.json"
               readOnly: true
+            - name: tmp
+              mountPath: /tmp
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -134,6 +136,8 @@ spec:
               drop:
                 - ALL            
       volumes:
+        - name: tmp
+          emptyDir: {}
         - name: google-creds
           secret:
             secretName: {{ include "namiview-api.googleCredsSecretName" . }}
