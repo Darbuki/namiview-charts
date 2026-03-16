@@ -3,7 +3,7 @@
 
 replicaCount: 2
 image:
-  tag: "prod-15-03-845c4ba"
+  tag: "prod-16-03-5aa978d"
 app:
   googleRedirectUri: "https://namiview.com/api/auth/callback"
   corsOrigins: "https://namiview.com"
