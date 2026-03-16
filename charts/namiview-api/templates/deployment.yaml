@@ -18,11 +18,11 @@ spec:
     spec:
       imagePullSecrets:
         - name: {{ include "namiview-api.dockercfgSecretName" . }}
-      securityContext: 
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 3000
-        fsGroup: 2000
+      # securityContext:
+      #   runAsNonRoot: true
+      #   runAsUser: 1000
+      #   runAsGroup: 3000
+      #   fsGroup: 2000
       containers:
         - name: app
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -34,13 +34,13 @@ spec:
             - name: metrics
               containerPort: {{ .Values.metrics.port }}
             {{- end }}
-          resources:
-            requests:
-              cpu: {{ .Values.resources.requests.cpu }}
-              memory: {{ .Values.resources.requests.memory }}
-            limits:
-              cpu: {{ .Values.resources.limits.cpu }}
-              memory: {{ .Values.resources.limits.memory }}                    
+          # resources:
+          #   requests:
+          #     cpu: {{ .Values.resources.requests.cpu }}
+          #     memory: {{ .Values.resources.requests.memory }}
+          #   limits:
+          #     cpu: {{ .Values.resources.limits.cpu }}
+          #     memory: {{ .Values.resources.limits.memory }}
           {{- if .Values.startupProbe.enabled }}
           startupProbe:
             httpGet:
@@ -127,17 +127,17 @@ spec:
               mountPath: "/app/google_credentials.json"
               subPath: "google_credentials.json"
               readOnly: true
-            - name: tmp
-              mountPath: /tmp
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL            
+          #   - name: tmp
+          #     mountPath: /tmp
+          # securityContext:
+          #   allowPrivilegeEscalation: false
+          #   readOnlyRootFilesystem: true
+          #   capabilities:
+          #     drop:
+          #       - ALL
       volumes:
-        - name: tmp
-          emptyDir: {}
+        # - name: tmp
+        #   emptyDir: {}
         - name: google-creds
           secret:
             secretName: {{ include "namiview-api.googleCredsSecretName" . }}
