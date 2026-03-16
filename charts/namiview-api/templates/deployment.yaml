@@ -36,11 +36,11 @@ spec:
             {{- end }}
           # resources:
           #   requests:
-          #     cpu: {{ .Values.resources.requests.cpu }}
-          #     memory: {{ .Values.resources.requests.memory }}
+          #     cpu: (from .Values.resources.requests.cpu)
+          #     memory: (from .Values.resources.requests.memory)
           #   limits:
-          #     cpu: {{ .Values.resources.limits.cpu }}
-          #     memory: {{ .Values.resources.limits.memory }}
+          #     cpu: (from .Values.resources.limits.cpu)
+          #     memory: (from .Values.resources.limits.memory)
           {{- if .Values.startupProbe.enabled }}
           startupProbe:
             httpGet:
