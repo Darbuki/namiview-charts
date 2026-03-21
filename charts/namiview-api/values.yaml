@@ -72,6 +72,7 @@ startupProbe:
     port: 8000
   failureThreshold: 30
   periodSeconds: 10
+  timeoutSeconds: 10
 
 livenessProbe:
   enabled: true
@@ -80,7 +81,7 @@ livenessProbe:
     port: 8000
   initialDelaySeconds: 10
   periodSeconds: 30
-  timeoutSeconds: 5
+  timeoutSeconds: 10
   failureThreshold: 3
 
 readinessProbe:
@@ -90,7 +91,7 @@ readinessProbe:
     port: 8000
   initialDelaySeconds: 5
   periodSeconds: 10
-  timeoutSeconds: 3
+  timeoutSeconds: 10
   failureThreshold: 3
 
 resources:
