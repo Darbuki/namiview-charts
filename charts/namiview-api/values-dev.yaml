@@ -3,7 +3,7 @@
 
 replicaCount: 1
 image:
-  tag: "dev-64-26-03-af7c6a5"
+  tag: "dev-64-26-03-52b9085"
 vault:
   paths:
     mongodbDb: namiview-dev/infra/mongodb/db
