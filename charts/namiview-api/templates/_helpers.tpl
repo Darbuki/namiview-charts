@@ -76,9 +76,9 @@ using $(MONGO_USER), $(MONGO_PASSWORD), and $(MONGO_DB) — these must be
 defined earlier in the env list.
 */}}
 {{- define "namiview-api.mongoUri" -}}
-{{- if .Values.app.mongo.atlas }}
+{{- if .Values.app.mongo.atlas -}}
 mongodb+srv://$(MONGO_USER):$(MONGO_PASSWORD)@{{ .Values.app.mongo.host }}/$(MONGO_DB)?retryWrites=true&w=majority&appName={{ .Values.app.mongo.appName | default "namiview" }}
-{{- else }}
+{{- else -}}
 mongodb://$(MONGO_USER):$(MONGO_PASSWORD)@{{ join "," .Values.app.mongo.hosts }}/$(MONGO_DB)?replicaSet={{ .Values.app.mongo.replicaSet }}&authSource={{ .Values.app.mongo.authSource }}
-{{- end }}
+{{- end -}}
 {{- end }}
