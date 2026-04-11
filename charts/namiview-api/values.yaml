@@ -42,6 +42,15 @@ serviceAccount:
   name: ""
   annotations: {}
 
+# Ingress configuration
+ingress:
+  enabled: false
+  className: ""
+  host: ""
+  path: /
+  pathType: Prefix
+  annotations: {}
+
 # Service configuration
 service:
   type: ClusterIP
