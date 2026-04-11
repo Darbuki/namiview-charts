@@ -70,11 +70,15 @@ when deployed to different namespaces.
 {{- end }}
 
 {{/*
-Build the MongoDB replica set connection string.
+Build the MongoDB connection string.
 Credentials are injected at runtime via Kubernetes env var interpolation
 using $(MONGO_USER), $(MONGO_PASSWORD), and $(MONGO_DB) — these must be
 defined earlier in the env list.
 */}}
 {{- define "namiview-api.mongoUri" -}}
+{{- if .Values.app.mongo.atlas }}
+mongodb+srv://$(MONGO_USER):$(MONGO_PASSWORD)@{{ .Values.app.mongo.host }}/$(MONGO_DB)?retryWrites=true&w=majority&appName={{ .Values.app.mongo.appName | default "namiview" }}
+{{- else }}
 mongodb://$(MONGO_USER):$(MONGO_PASSWORD)@{{ join "," .Values.app.mongo.hosts }}/$(MONGO_DB)?replicaSet={{ .Values.app.mongo.replicaSet }}&authSource={{ .Values.app.mongo.authSource }}
+{{- end }}
 {{- end }}
