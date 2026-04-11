@@ -16,6 +16,9 @@ spec:
       labels:
         {{- include "namiview-api.selectorLabels" . | nindent 8 }}
     spec:
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: {{ .Values.serviceAccount.name | default (include "namiview-api.fullname" .) }}
+      {{- end }}
       imagePullSecrets:
         - name: {{ include "namiview-api.dockercfgSecretName" . }}
       # securityContext:
@@ -91,7 +94,15 @@ spec:
             # for Kubernetes $(VAR) interpolation to work here.
             - name: MONGO_URI
               value: {{ include "namiview-api.mongoUri" . | quote }}
-            # ── MinIO ──────────────────────────────────────────────────────
+            # ── Storage ────────────────────────────────────────────────────
+            - name: STORAGE_BACKEND
+              value: {{ .Values.storage.backend | quote }}
+            {{- if eq .Values.storage.backend "s3" }}
+            - name: S3_BUCKET
+              value: {{ .Values.storage.s3.bucket | quote }}
+            - name: AWS_REGION
+              value: {{ .Values.storage.s3.region | quote }}
+            {{- else }}
             - name: MINIO_ENDPOINT
               value: {{ .Values.app.minio.endpoint | quote }}
             - name: MINIO_ACCESS_KEY
@@ -114,6 +125,7 @@ spec:
                 secretKeyRef:
                   name: {{ include "namiview-api.connectionSecretName" . }}
                   key: MINIO_SECURE
+            {{- end }}
             - name: GOOGLE_REDIRECT_URI
               value: {{ .Values.app.googleRedirectUri | quote }}
             - name: GOOGLE_APPLICATION_CREDENTIALS

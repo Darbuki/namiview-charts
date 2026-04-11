@@ -26,6 +26,19 @@ app:
     replicaSet: "rs0"
     authSource: "admin"
 
+# Storage backend: "minio" (default, homelab) or "s3" (EKS)
+storage:
+  backend: minio
+  s3:
+    bucket: ""
+    region: ""
+
+# Service account for IRSA (EKS) or default
+serviceAccount:
+  create: false
+  name: ""
+  annotations: {}
+
 # Service configuration
 service:
   type: ClusterIP
