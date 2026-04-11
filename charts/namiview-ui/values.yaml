@@ -25,6 +25,15 @@ vault:
   paths:
     dockerReg: namiview/app/docker-reg
 
+# Ingress configuration
+ingress:
+  enabled: false
+  className: ""
+  host: ""
+  path: /
+  pathType: Prefix
+  annotations: {}
+
 metrics:
   enabled: false
 
