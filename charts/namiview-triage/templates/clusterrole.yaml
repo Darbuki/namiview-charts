@@ -1,0 +1,22 @@
+{{- if .Values.rbac.create }}
+# Cluster-wide read-only access. The agent investigates failures across any
+# namespace in the cluster, so we grant cluster scope rather than per-namespace.
+# Verbs are strictly read — get/list/watch only. `pods/log` is a subresource
+# and must be listed separately from `pods`.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "namiview-triage.fullname" . }}
+  labels:
+    {{- include "namiview-triage.labels" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources:
+      - pods
+      - events
+      - namespaces
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get", "list"]
+{{- end }}
