@@ -1,0 +1,8 @@
+apiVersion: v2
+name: namiview-triage
+description: Namiview incident-triage AI agent — watches Alertmanager, investigates failures, files GitHub issues
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+maintainers:
+  - name: darbuki
