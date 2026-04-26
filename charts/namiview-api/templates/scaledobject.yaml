@@ -15,7 +15,7 @@ spec:
   cooldownPeriod: {{ .Values.autoscaling.cooldownPeriod }}
   triggers:
     {{- if .Values.autoscaling.triggers.memory.enabled }}
-   - type: memory
+    - type: memory
       metricType: Utilization
       metadata:
         value: "{{ .Values.autoscaling.triggers.memory.utilization }}"
