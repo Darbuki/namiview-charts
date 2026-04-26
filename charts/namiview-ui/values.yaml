@@ -52,3 +52,22 @@ readinessProbe:
     port: 80
   periodSeconds: 5
   failureThreshold: 3
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+.
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  pollingInterval: 30
+  cooldownPeriod: 300
+  triggers:
+    memory:
+      enabled: true
+      utilization: 70

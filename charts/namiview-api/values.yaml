@@ -130,3 +130,13 @@ resources:
 PodDisruptionBudget:
   enabled: true
   minAvailable: 1
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  pollingInterval: 30
+  cooldownPeriod: 300
+  triggers:
+    memory:
+      enabled: true
+      utilization: 70

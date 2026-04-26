@@ -53,26 +53,18 @@ service:
   port: 80
   targetPort: 8080
 
-# AlertmanagerConfig — tells the cluster's Alertmanager to route matching
-# alerts to this service. Requires matcherStrategy: None on the Alertmanager
-# CR (set in namiviewk8s/infrastructure-eks/monitoring-app.yaml).
 alertmanagerConfig:
   enabled: true
-  # Routing match: any alert whose alertname is in this list is delivered here.
-  # `continue: true` means other routes (email/slack/whatever) still receive
-  # the alert — we're additive, not a capture.
   alertnames:
     - KubePodCrashLooping
     - KubeContainerWaiting
     - KubePodNotReady
     - KubePodOOMKilled
-  # Dedup / throttle knobs. Tight defaults — we'd rather miss a retry than
-  # double-file an issue.
+    - KEDAScalerErrors
   groupWait: 30s
   groupInterval: 5m
   repeatInterval: 12h
 
-# Probes — the server exposes /healthz (liveness + readiness).
 livenessProbe:
   enabled: true
   httpGet:
