@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "namiview-triage.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "namiview-triage.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  # One agent at a time for now — the server is stateless but a rolling
+  # restart mid-investigation would kill the background task. Recreate
+  # strategy is simpler and fine at replicas=1.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "namiview-triage.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "namiview-triage.labels" . | nindent 8 }}
+      annotations:
+        # Force pod restart when either secret rotates. The ExternalSecret
+        # controller writes the k8s Secret; without this annotation, the
+        # pod keeps the stale env vars until its next natural restart.
+        checksum/secrets: {{ printf "%s-%s" .Values.externalSecrets.paths.anthropic .Values.externalSecrets.paths.github | sha256sum }}
+    spec:
+      serviceAccountName: {{ include "namiview-triage.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: triage
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: GITHUB_REPO
+              value: {{ required "app.githubRepo must be set (e.g. \"Darbuki/namiview\")" .Values.app.githubRepo | quote }}
+            - name: LOG_LEVEL
+              value: {{ .Values.app.logLevel | quote }}
+            - name: TRIAGE_MAX_CONCURRENT
+              value: {{ .Values.app.maxConcurrent | quote }}
+            - name: PORT
+              value: "8080"
+          envFrom:
+            # Pulls ANTHROPIC_API_KEY from the anthropic ExternalSecret
+            # and GITHUB_TOKEN from the github ExternalSecret.
+            - secretRef:
+                name: {{ include "namiview-triage.anthropicSecretName" . }}
+            - secretRef:
+                name: {{ include "namiview-triage.githubSecretName" . }}
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.livenessProbe.httpGet.path }}
+              port: {{ .Values.livenessProbe.httpGet.port }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.readinessProbe.httpGet.path }}
+              port: {{ .Values.readinessProbe.httpGet.port }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          # readOnlyRootFilesystem is on — give the process a writable
+          # /tmp for anything Python/httpx might want to spill.
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

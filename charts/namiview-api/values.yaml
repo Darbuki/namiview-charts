@@ -19,12 +19,37 @@ app:
     endpoint: "minio.namiview-infra.svc.cluster.local:9000"
 
   mongo:
+    atlas: false
+    host: ""
+    appName: ""
     hosts:
       - "mongo-mongodb-0.mongo-mongodb-headless.namiview-infra.svc.cluster.local:27017"
       - "mongo-mongodb-1.mongo-mongodb-headless.namiview-infra.svc.cluster.local:27017"
       - "mongo-mongodb-2.mongo-mongodb-headless.namiview-infra.svc.cluster.local:27017"
     replicaSet: "rs0"
     authSource: "admin"
+
+# Storage backend: "minio" (default, homelab) or "s3" (EKS)
+storage:
+  backend: minio
+  s3:
+    bucket: ""
+    region: ""
+
+# Service account for IRSA (EKS) or default
+serviceAccount:
+  create: false
+  name: ""
+  annotations: {}
+
+# Ingress configuration
+ingress:
+  enabled: false
+  className: ""
+  host: ""
+  path: /
+  pathType: Prefix
+  annotations: {}
 
 # Service configuration
 service:
@@ -105,3 +130,13 @@ resources:
 PodDisruptionBudget:
   enabled: true
   minAvailable: 1
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  pollingInterval: 30
+  cooldownPeriod: 300
+  triggers:
+    memory:
+      enabled: true
+      utilization: 70

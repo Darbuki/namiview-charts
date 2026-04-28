@@ -1,0 +1,23 @@
+{{- if .Values.autoscaling.enabled }}
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ include "namiview-api.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "namiview-api.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    name: {{ include "namiview-api.fullname" . }}
+  minReplicaCount: {{ .Values.autoscaling.minReplicas }}
+  maxReplicaCount: {{ .Values.autoscaling.maxReplicas }}
+  pollingInterval: {{ .Values.autoscaling.pollingInterval }}
+  cooldownPeriod: {{ .Values.autoscaling.cooldownPeriod }}
+  triggers:
+    {{- if .Values.autoscaling.triggers.memory.enabled }}
+    - type: memory
+      metricType: Utilization
+      metadata:
+        value: "{{ .Values.autoscaling.triggers.memory.utilization }}"
+    {{- end }}
+{{- end }}

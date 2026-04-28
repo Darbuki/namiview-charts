@@ -1,0 +1,115 @@
+# Default values for namiview-triage.
+#
+# Image is pulled from the `namiview-agents` CI pipeline which pushes
+# `darbuki/namiview-triage:latest` + `:sha-<short>` on every push to main.
+
+replicaCount: 1
+
+image:
+  repository: darbuki/namiview-triage
+  tag: latest
+  pullPolicy: Always
+
+revisionHistoryLimit: 3
+
+# Application config. Env vars consumed by the server; see
+# agents/triage/src/namiview_triage/server.py.
+#
+# `githubRepo` is intentionally NOT defaulted — set it per-env in the Argo
+# Application values so a stray `helm install` can't file issues against
+# whatever repo the chart happens to ship with.
+app:
+  githubRepo: ""       # REQUIRED — e.g. "Darbuki/namiview"
+  logLevel: INFO
+  # How many investigations may run in parallel. Bounded so an alert storm
+  # doesn't fan out token spend. Queued runs block briefly inside the pod.
+  maxConcurrent: 3
+
+# Service account — the pod's cluster identity. RBAC below binds a
+# read-only ClusterRole to this SA.
+serviceAccount:
+  create: true
+  name: ""         # defaults to fullname
+  annotations: {}
+
+# RBAC: read-only cluster access to the resources the agent investigates.
+rbac:
+  create: true
+
+# External Secrets — the *structure* lives in the chart; *where* to pull
+# from is environment-specific and must be set in the Argo Application
+# values. Empty defaults fail loudly via `required` in the template.
+externalSecrets:
+  enabled: true
+  clusterSecretStore: ""  # REQUIRED — e.g. "aws-secrets-manager" (EKS), "vault-cluster-gateway" (homelab)
+  refreshInterval: "1h"
+  paths:
+    anthropic: ""         # REQUIRED — SM/vault path holding ANTHROPIC_API_KEY
+    github: ""            # REQUIRED — SM/vault path holding GITHUB_TOKEN
+
+# Service — ClusterIP only. Reached from Alertmanager in the monitoring namespace.
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+alertmanagerConfig:
+  enabled: true
+  alertnames:
+    - KubePodCrashLooping
+    - KubeContainerWaiting
+    - KubePodNotReady
+    - KubePodOOMKilled
+    - KEDAScalerErrors
+  groupWait: 30s
+  groupInterval: 5m
+  repeatInterval: 12h
+
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /healthz
+    port: 8080
+  initialDelaySeconds: 15
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /healthz
+    port: 8080
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# NetworkPolicy — disabled by default. Enable in prod to restrict
+# ingress to the monitoring namespace (Alertmanager) and egress to
+# kube-apiserver + DNS + Anthropic/GitHub (443).
+networkPolicy:
+  enabled: false
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop: ["ALL"]
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

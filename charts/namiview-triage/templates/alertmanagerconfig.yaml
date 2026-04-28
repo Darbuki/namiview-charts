@@ -1,0 +1,35 @@
+{{- if .Values.alertmanagerConfig.enabled }}
+# Tells the cluster's Alertmanager (kube-prometheus-stack) to route matching
+# alerts to our webhook.
+#
+# NOTE: this only works because the Alertmanager CR is configured with
+# `alertmanagerConfigMatcherStrategy.type: None` — otherwise the operator
+# would auto-scope our matchers to this config's namespace. That flag is
+# set in namiviewk8s/infrastructure-eks/monitoring-app.yaml.
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: {{ include "namiview-triage.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "namiview-triage.labels" . | nindent 4 }}
+spec:
+  route:
+    # Additive route: `continue: true` means other receivers (slack, email,
+    # whatever) still get the alert. We don't capture.
+    continue: true
+    receiver: triage-agent-webhook
+    groupBy: ["alertname", "namespace"]
+    groupWait: {{ .Values.alertmanagerConfig.groupWait }}
+    groupInterval: {{ .Values.alertmanagerConfig.groupInterval }}
+    repeatInterval: {{ .Values.alertmanagerConfig.repeatInterval }}
+    matchers:
+      - name: alertname
+        matchType: "=~"
+        value: "{{ join "|" .Values.alertmanagerConfig.alertnames }}"
+  receivers:
+    - name: triage-agent-webhook
+      webhookConfigs:
+        - url: "http://{{ include "namiview-triage.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}/triage"
+          sendResolved: false
+{{- end }}

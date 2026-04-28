@@ -29,13 +29,10 @@ spec:
             - name: metrics
               containerPort: {{ .Values.metrics.port }}
             {{- end }}
-          # resources:
-          #   requests:
-          #     cpu: (from .Values.resources.requests.cpu)
-          #     memory: (from .Values.resources.requests.memory)
-          #   limits:
-          #     cpu: (from .Values.resources.limits.cpu)
-          #     memory: (from .Values.resources.limits.memory)
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- if .Values.readinessProbe.enabled }}   
           readinessProbe:
             httpGet: 
