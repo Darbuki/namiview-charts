@@ -22,6 +22,7 @@ app:
     atlas: false
     host: ""
     appName: ""
+    collection: ""
     hosts:
       - "mongo-mongodb-0.mongo-mongodb-headless.namiview-infra.svc.cluster.local:27017"
       - "mongo-mongodb-1.mongo-mongodb-headless.namiview-infra.svc.cluster.local:27017"

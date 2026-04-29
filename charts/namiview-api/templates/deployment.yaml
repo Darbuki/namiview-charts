@@ -95,6 +95,10 @@ spec:
             # for Kubernetes $(VAR) interpolation to work here.
             - name: MONGO_URI
               value: {{ include "namiview-api.mongoUri" . | quote }}
+            {{- if .Values.app.mongo.collection }}
+            - name: MONGO_COLLECTION
+              value: {{ .Values.app.mongo.collection | quote }}
+            {{- end }}
             # ── Storage ────────────────────────────────────────────────────
             - name: STORAGE_BACKEND
               value: {{ .Values.storage.backend | quote }}
