@@ -23,6 +23,7 @@ app:
     host: ""
     appName: ""
     collection: ""
+    jobsCollection: ""
     hosts:
       - "mongo-mongodb-0.mongo-mongodb-headless.namiview-infra.svc.cluster.local:27017"
       - "mongo-mongodb-1.mongo-mongodb-headless.namiview-infra.svc.cluster.local:27017"
@@ -36,6 +37,10 @@ storage:
   s3:
     bucket: ""
     region: ""
+
+# Async job queue (SQS). Set per-env. Empty = endpoint returns 503.
+jobs:
+  queueUrl: ""
 
 # Service account for IRSA (EKS) or default
 serviceAccount:
