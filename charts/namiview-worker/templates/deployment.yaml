@@ -39,7 +39,6 @@ spec:
         - name: worker
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["python", "-m", "namiview_worker"]
           {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}

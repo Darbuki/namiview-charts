@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: darbuki/namiview-api
+  repository: darbuki/namiview-worker
   tag: latest
   pullPolicy: IfNotPresent
 
