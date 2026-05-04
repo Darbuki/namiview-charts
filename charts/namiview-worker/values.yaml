@@ -1,0 +1,51 @@
+replicaCount: 1
+
+image:
+  repository: darbuki/namiview-worker
+  tag: latest
+  pullPolicy: IfNotPresent
+
+revisionHistoryLimit: 3
+
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+
+# SQS job queue URL — required, set per-env in apps-eks-{dev,prod}/<...>/values.yaml.
+jobs:
+  queueUrl: ""
+
+# S3-only on EKS. No MinIO support in this chart.
+storage:
+  s3:
+    bucket: ""
+    region: "eu-west-1"
+
+app:
+  mongo:
+    atlas: true
+    host: ""
+    appName: ""
+    # Override JOBS_COLLECTION env. Empty default = JobsRepository falls back to "jobs".
+    jobsCollection: ""
+
+vault:
+  clusterSecretStore: aws-secrets-manager
+  refreshInterval: "1h"
+  paths:
+    mongodb: namiview-prod/mongodb
+    mongodbDb: namiview-prod/mongodb
+    dockerReg: namiview-prod/dockerhub
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 2Gi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

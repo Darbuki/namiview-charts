@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "namiview-worker.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "namiview-worker.labels" . | nindent 4 }}
+spec:
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "namiview-worker.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "namiview-worker.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: {{ .Values.serviceAccount.name | default (include "namiview-worker.fullname" .) }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      imagePullSecrets:
+        - name: {{ include "namiview-worker.dockercfgSecretName" . }}
+      containers:
+        - name: worker
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "namiview-worker.connectionSecretName" . }}
+                  key: MONGO_USER
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "namiview-worker.connectionSecretName" . }}
+                  key: MONGO_PASSWORD
+            - name: MONGO_DB
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "namiview-worker.connectionSecretName" . }}
+                  key: MONGO_DB
+            - name: MONGO_URI
+              value: {{ include "namiview-worker.mongoUri" . | quote }}
+            {{- if .Values.app.mongo.jobsCollection }}
+            - name: JOBS_COLLECTION
+              value: {{ .Values.app.mongo.jobsCollection | quote }}
+            {{- end }}
+            - name: S3_BUCKET
+              value: {{ .Values.storage.s3.bucket | quote }}
+            - name: AWS_REGION
+              value: {{ .Values.storage.s3.region | quote }}
+            - name: JOBS_QUEUE_URL
+              value: {{ required "jobs.queueUrl is required" .Values.jobs.queueUrl | quote }}
