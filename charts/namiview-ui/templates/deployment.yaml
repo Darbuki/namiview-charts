@@ -16,8 +16,6 @@ spec:
       labels:
         {{- include "namiview-ui.selectorLabels" . | nindent 8 }}
     spec:
-      imagePullSecrets:
-        - name: {{ include "namiview-ui.dockercfgSecretName" . }}
       containers:
         - name: namiview-ui
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

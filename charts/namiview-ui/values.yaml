@@ -22,8 +22,7 @@ service:
 vault:
   clusterSecretStore: vault-cluster-gateway
   refreshInterval: "1h"
-  paths:
-    dockerReg: namiview/app/docker-reg
+  paths: {}
 
 # Ingress configuration
 ingress:

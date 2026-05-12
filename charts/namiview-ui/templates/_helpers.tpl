@@ -49,11 +49,4 @@ app.kubernetes.io/name: {{ include "namiview-ui.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
-{{/*
-Secret names — derived from fullname so prod and dev don't collide
-when deployed to different namespaces.
-*/}}
-{{- define "namiview-ui.dockercfgSecretName" -}}
-{{ include "namiview-ui.fullname" . }}-dockercfg
-{{- end }}
 

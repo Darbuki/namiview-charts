@@ -33,8 +33,6 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      imagePullSecrets:
-        - name: {{ include "namiview-worker.dockercfgSecretName" . }}
       containers:
         - name: worker
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

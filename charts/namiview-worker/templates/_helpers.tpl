@@ -37,10 +37,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{ include "namiview-worker.fullname" . }}-connection-secret
 {{- end }}
 
-{{- define "namiview-worker.dockercfgSecretName" -}}
-{{ include "namiview-worker.fullname" . }}-dockercfg
-{{- end }}
-
 {{/*
 Atlas SRV connection string. Credentials interpolate at runtime via
 Kubernetes env-var $(VAR) substitution — MONGO_USER/PASSWORD/DB must be
