@@ -23,10 +23,6 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.vault.paths.dockerReg }}
-      imagePullSecrets:
-        - name: {{ include "namiview-api.dockercfgSecretName" . }}
-      {{- end }}
       # securityContext:
       #   runAsNonRoot: true
       #   runAsUser: 1000

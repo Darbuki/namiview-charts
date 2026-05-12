@@ -36,7 +36,6 @@ vault:
   paths:
     mongodb: namiview-prod/mongodb
     mongodbDb: namiview-prod/mongodb
-    dockerReg: namiview-prod/dockerhub
 
 resources:
   requests:

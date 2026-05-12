@@ -75,7 +75,6 @@ vault:
     minio: namiview/infra/minio/root
     minioBucket: namiview/infra/minio/bucket
     minioSecure: namiview/infra/minio/secure
-    dockerReg: namiview/app/docker-reg
     googleCreds: namiview/app/google_creds.json
     jwt: namiview/app/jwt
 

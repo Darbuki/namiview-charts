@@ -57,10 +57,6 @@ when deployed to different namespaces.
 {{ include "namiview-api.fullname" . }}-connection-secret
 {{- end }}
 
-{{- define "namiview-api.dockercfgSecretName" -}}
-{{ include "namiview-api.fullname" . }}-dockercfg
-{{- end }}
-
 {{- define "namiview-api.googleCredsSecretName" -}}
 {{ include "namiview-api.fullname" . }}-google-creds
 {{- end }}
