@@ -63,6 +63,8 @@ spec:
             - name: JOBS_COLLECTION
               value: {{ .Values.app.mongo.jobsCollection | quote }}
             {{- end }}
+            - name: STORAGE_BACKEND
+              value: {{ .Values.storage.backend | default "s3" | quote }}
             - name: S3_BUCKET
               value: {{ .Values.storage.s3.bucket | quote }}
             - name: AWS_REGION
