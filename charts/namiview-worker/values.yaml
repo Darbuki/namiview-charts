@@ -48,3 +48,10 @@ resources:
 nodeSelector: {}
 tolerations: []
 affinity: {}
+
+imagePullSecrets: []
+
+aws:
+  staticCredentials:
+    enabled: false
+    secretName: aws-credentials
