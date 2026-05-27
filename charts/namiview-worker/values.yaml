@@ -48,3 +48,20 @@ resources:
 nodeSelector: {}
 tolerations: []
 affinity: {}
+
+imagePullSecrets: []
+
+aws:
+  staticCredentials:
+    enabled: false
+    secretName: aws-credentials
+
+# Prometheus metrics scraped from the worker pod. The runner starts an HTTP
+# server on this port at boot (see start_metrics_server in monitoring/metrics.py).
+metrics:
+  enabled: true
+  port: 9090
+  serviceMonitor:
+    enabled: false
+    interval: 30s
+    scrapeTimeout: 10s

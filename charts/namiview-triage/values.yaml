@@ -113,3 +113,5 @@ securityContext:
 nodeSelector: {}
 tolerations: []
 affinity: {}
+
+imagePullSecrets: []

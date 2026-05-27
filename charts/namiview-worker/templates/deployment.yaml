@@ -33,10 +33,20 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: worker
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.metrics.enabled }}
+          ports:
+            - name: metrics
+              containerPort: {{ .Values.metrics.port }}
+              protocol: TCP
+          {{- end }}
           {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
@@ -69,5 +79,17 @@ spec:
               value: {{ .Values.storage.s3.bucket | quote }}
             - name: AWS_REGION
               value: {{ .Values.storage.s3.region | quote }}
+            {{- if .Values.aws.staticCredentials.enabled }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.aws.staticCredentials.secretName | default "aws-credentials" }}
+                  key: access-key-id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.aws.staticCredentials.secretName | default "aws-credentials" }}
+                  key: secret-access-key
+            {{- end }}
             - name: JOBS_QUEUE_URL
               value: {{ required "jobs.queueUrl is required" .Values.jobs.queueUrl | quote }}

@@ -70,3 +70,4 @@ autoscaling:
     memory:
       enabled: true
       utilization: 70
+imagePullSecrets: []

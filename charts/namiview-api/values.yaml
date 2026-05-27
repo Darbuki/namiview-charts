@@ -145,3 +145,16 @@ autoscaling:
     memory:
       enabled: true
       utilization: 70
+# Image pull secrets — populate when pulling from a private registry that
+# requires per-pod credentials (e.g. ECR on a non-EKS cluster where IRSA
+# isn't available; the regcred secret is refreshed by a CronJob).
+imagePullSecrets: []
+# - name: regcred
+
+# AWS access for storage.backend=s3 / SQS jobs. On EKS use IRSA (the
+# serviceAccount role-arn annotation); on non-EKS clusters set enabled=true
+# to mount AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY from a k8s secret.
+aws:
+  staticCredentials:
+    enabled: false
+    secretName: aws-credentials
