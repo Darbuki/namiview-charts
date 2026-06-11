@@ -27,6 +27,8 @@ app:
     atlas: true
     host: ""
     appName: ""
+    # Override MONGO_COLLECTION env (images). Empty default = MongoStorage falls back to "images".
+    collection: ""
     # Override JOBS_COLLECTION env. Empty default = JobsRepository falls back to "jobs".
     jobsCollection: ""
 
