@@ -69,6 +69,10 @@ spec:
                   key: MONGO_DB
             - name: MONGO_URI
               value: {{ include "namiview-worker.mongoUri" . | quote }}
+            {{- if .Values.app.mongo.collection }}
+            - name: MONGO_COLLECTION
+              value: {{ .Values.app.mongo.collection | quote }}
+            {{- end }}
             {{- if .Values.app.mongo.jobsCollection }}
             - name: JOBS_COLLECTION
               value: {{ .Values.app.mongo.jobsCollection | quote }}
