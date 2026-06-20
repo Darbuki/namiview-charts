@@ -77,6 +77,10 @@ spec:
             - name: JOBS_COLLECTION
               value: {{ .Values.app.mongo.jobsCollection | quote }}
             {{- end }}
+            {{- if .Values.app.enabledModels }}
+            - name: ENABLED_MODELS
+              value: {{ .Values.app.enabledModels | quote }}
+            {{- end }}
             - name: STORAGE_BACKEND
               value: {{ .Values.storage.backend | default "s3" | quote }}
             - name: S3_BUCKET

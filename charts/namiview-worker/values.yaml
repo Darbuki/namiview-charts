@@ -31,6 +31,10 @@ app:
     collection: ""
     # Override JOBS_COLLECTION env. Empty default = JobsRepository falls back to "jobs".
     jobsCollection: ""
+  # Model feature flags: comma-list of canonical keys to enable (e.g.
+  # "physics-light,nami-v2"). Empty = code default (the 5 prod variants). Set
+  # per-env in apps-homelab*/namiview-worker/values.yaml.
+  enabledModels: ""
 
 vault:
   clusterSecretStore: aws-secrets-manager

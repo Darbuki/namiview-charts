@@ -14,6 +14,9 @@ revisionHistoryLimit: 3
 app:
   googleRedirectUri: "https://namiview.com/api/auth/callback"
   corsOrigins: "https://namiview.com"
+  # Model feature flags: comma-list of canonical keys to enable (empty = the 5
+  # prod variants). Set per-env in apps-homelab*/namiview-api/values.yaml.
+  enabledModels: ""
 
   minio:
     endpoint: "minio.namiview-infra.svc.cluster.local:9000"

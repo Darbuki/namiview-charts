@@ -109,6 +109,10 @@ spec:
             - name: JOBS_QUEUE_URL
               value: {{ .Values.jobs.queueUrl | quote }}
             {{- end }}
+            {{- if .Values.app.enabledModels }}
+            - name: ENABLED_MODELS
+              value: {{ .Values.app.enabledModels | quote }}
+            {{- end }}
             # ── Storage ────────────────────────────────────────────────────
             - name: STORAGE_BACKEND
               value: {{ .Values.storage.backend | quote }}
