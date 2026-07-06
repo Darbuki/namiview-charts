@@ -51,6 +51,18 @@ resources:
     cpu: 1000m
     memory: 2Gi
 
+# Container hardening (namiview-charts security audit). The worker decodes
+# attacker-supplied images, so confine the blast radius of a decoder exploit.
+# Safe subset only — readOnlyRootFilesystem / runAsNonRoot are deferred until
+# validated against the image-processing temp-file + Dockerfile USER needs.
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  seccompProfile:
+    type: RuntimeDefault
+
 nodeSelector: {}
 tolerations: []
 affinity: {}
