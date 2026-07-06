@@ -46,6 +46,9 @@ externalSecrets:
   paths:
     anthropic: ""         # REQUIRED — SM/vault path holding ANTHROPIC_API_KEY
     github: ""            # REQUIRED — SM/vault path holding GITHUB_TOKEN
+    webhookToken: ""      # OPTIONAL — SM/vault path holding TRIAGE_WEBHOOK_TOKEN.
+                          # When set, /triage requires `Authorization: Bearer <token>`
+                          # and Alertmanager must send it. Unset → warn-and-allow.
 
 # Service — ClusterIP only. Reached from Alertmanager in the monitoring namespace.
 service:

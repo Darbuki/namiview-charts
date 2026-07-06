@@ -69,3 +69,7 @@ Secret names — one per ExternalSecret so each is a first-class k8s object.
 {{- define "namiview-triage.githubSecretName" -}}
 {{ include "namiview-triage.fullname" . }}-github
 {{- end }}
+
+{{- define "namiview-triage.webhookSecretName" -}}
+{{ include "namiview-triage.fullname" . }}-webhook
+{{- end }}
