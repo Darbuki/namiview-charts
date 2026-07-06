@@ -77,6 +77,12 @@ spec:
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
           {{- end }}            
           env:
+            # ── Environment posture ────────────────────────────────────────
+            # Turns on the API's fail-closed guards (reject default JWT secret,
+            # Secure cookies). Every chart deployment is a real (non-local) env,
+            # so default to production; override via app.environment if needed.
+            - name: NAMIVIEW_ENV
+              value: {{ .Values.app.environment | default "production" | quote }}
             # ── MongoDB ────────────────────────────────────────────────────
             - name: MONGO_USER
               valueFrom:
