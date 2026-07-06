@@ -52,6 +52,15 @@ spec:
               value: {{ .Values.app.maxConcurrent | quote }}
             - name: PORT
               value: "8080"
+            {{- if .Values.externalSecrets.paths.webhookToken }}
+            # Bearer token guarding /triage. Present only when the vault path is
+            # set; the server enforces it and warns-and-allows when it's absent.
+            - name: TRIAGE_WEBHOOK_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "namiview-triage.webhookSecretName" . }}
+                  key: TRIAGE_WEBHOOK_TOKEN
+            {{- end }}
           envFrom:
             # Pulls ANTHROPIC_API_KEY from the anthropic ExternalSecret
             # and GITHUB_TOKEN from the github ExternalSecret.
