@@ -135,6 +135,17 @@ resources:
     cpu: 1000m
     memory: 2Gi
 
+# Container hardening (namiview-charts#12). Safe subset — the API binds an
+# unprivileged port (8000), so dropping all caps is fine. readOnlyRootFilesystem
+# / runAsNonRoot deferred pending validation of temp-file + credential-unwrap paths.
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  seccompProfile:
+    type: RuntimeDefault
+
 PodDisruptionBudget:
   enabled: true
   minAvailable: 1

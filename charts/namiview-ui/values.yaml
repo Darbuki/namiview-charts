@@ -60,6 +60,27 @@ resources:
     cpu: 200m
     memory: 128Mi
 
+# Container hardening (namiview-charts#12). nginx binds privileged port 80, so
+# drop ALL caps but keep NET_BIND_SERVICE — otherwise the bind fails and the pod
+# CrashLoops. readOnlyRootFilesystem deferred (nginx writes /var/cache, /var/run).
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+    # The stock nginx image's root master needs these at startup: CHOWN to set
+    # up /var/cache/nginx, SETUID/SETGID to drop workers to the nginx user, and
+    # NET_BIND_SERVICE to bind port 80. Verified in nginx:1.27-alpine — dropping
+    # ALL without these CrashLoops on chown(/var/cache/nginx/...). Still drops
+    # ~34 of the ~38 caps.
+    add:
+      - CHOWN
+      - SETUID
+      - SETGID
+      - NET_BIND_SERVICE
+  seccompProfile:
+    type: RuntimeDefault
+
 autoscaling:
   enabled: false
   minReplicas: 1
