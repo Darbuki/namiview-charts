@@ -8,6 +8,9 @@ replicaCount: 1
 image:
   repository: darbuki/namiview-triage
   tag: latest
+  # Set `digest` (sha256:...) to pin an immutable image; when set it takes
+  # precedence over `tag` (repository@digest). Leave empty to use tag.
+  digest: ""
   pullPolicy: Always
 
 revisionHistoryLimit: 3
