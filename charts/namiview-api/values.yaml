@@ -14,6 +14,13 @@ revisionHistoryLimit: 3
 app:
   googleRedirectUri: "https://namiview.com/api/auth/callback"
   corsOrigins: "https://namiview.com"
+  # Native (iOS) Google sign-in. Google issues a SEPARATE client for installed
+  # apps — no client secret, and it only accepts the reversed-client-id
+  # redirect. The server derives GOOGLE_NATIVE_REDIRECT_URI from this, so the
+  # app and server cannot drift. Not a secret: an iOS client id ships inside
+  # every copy of the app binary, so it lives here rather than in Secrets
+  # Manager. Empty = native sign-in falls back to the legacy path (inert).
+  googleIosClientId: ""
   # Model feature flags: comma-list of canonical keys to enable (empty = the 5
   # prod variants). Set per-env in apps-homelab*/namiview-api/values.yaml.
   enabledModels: ""
